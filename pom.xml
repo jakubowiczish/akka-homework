@@ -14,6 +14,13 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+        </dependency>
+
         <dependency>
             <groupId>io.aeron</groupId>
             <artifactId>aeron-client</artifactId>
@@ -132,6 +139,11 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+        </dependency>
     </dependencies>
 
 </project>
