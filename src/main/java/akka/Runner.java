@@ -17,7 +17,8 @@ public class Runner {
     private static final int NUMBER_OF_CLIENTS = 10;
     private static final int NUMBER_OF_TEST_ATTEMPTS = 10;
 
-    private static final String PROGRAM_USAGE_HELP = " t - tests exemplary clients\n"
+    private static final String PROGRAM_USAGE_HELP = "PROGRAM USAGE\n "
+            + " t - tests exemplary clients\n"
             + " c [id] [object-name] - sends a request with clients' id [id] for specific objects' price with name [object-name]\n"
             + " exit - sends a request to close the application";
 
@@ -32,6 +33,8 @@ public class Runner {
             clients.add(client);
         }
 
+        System.out.println(PROGRAM_USAGE_HELP);
+
         handleUserInput(clients);
     }
 
@@ -44,9 +47,10 @@ public class Runner {
             if (line.startsWith("t")) {
                 testClients(clients);
             } else if (line.startsWith("c")) {
-                String[] splittedLine = line.split(" ");
-                int clientNum = Integer.parseInt(splittedLine[1]);
-                String objectName = splittedLine[2];
+                final String[] splittedLine = line.split(" ");
+                final int clientNum = Integer.parseInt(splittedLine[1]);
+                final String objectName = splittedLine[2];
+
                 clients.get(clientNum).tell(new GetPriceRequest(objectName), null);
             } else if (line.startsWith("exit")) {
                 System.out.println("Closing the application...");

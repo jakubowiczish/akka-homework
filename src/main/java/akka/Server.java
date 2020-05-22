@@ -4,13 +4,12 @@ import akka.actor.AbstractActor;
 import akka.actor.Props;
 import akka.event.LoggingAdapter;
 import akka.price.GetPriceRequest;
-import lombok.extern.java.Log;
 
 import static akka.event.Logging.getLogger;
 
-@Log
 public final class Server extends AbstractActor {
 
+    private final LoggingAdapter log = getLogger(getContext().getSystem(), this);
 
     @Override
     public Receive createReceive() {
