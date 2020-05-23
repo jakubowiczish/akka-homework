@@ -19,12 +19,16 @@ public class Database {
     private static volatile Database instance;
     private static final Object mutex = new Object();
 
-    private final ExecutorService executorService = Executors.newFixedThreadPool(1);
     private final Connection connection;
-    private final Map<String, LongAdder> cacheForQueries = new ConcurrentHashMap<>();
+
+    private final Map<String, LongAdder> cacheForQueries;
+    private final ExecutorService executorService;
 
     @SneakyThrows
     private Database() {
+        cacheForQueries = new ConcurrentHashMap<>();
+        executorService = Executors.newFixedThreadPool(1);
+
         Class.forName("org.sqlite.JDBC");
 
         connection = DriverManager.getConnection("jdbc:sqlite:akka.db");
@@ -46,7 +50,7 @@ public class Database {
     }
 
     @SneakyThrows
-    public int getAndIncrementQueriesCounter(final String objectName) {
+    public synchronized int getAndIncrementQueriesCounter(final String objectName) {
         if (cacheForQueries.containsKey(objectName)) {
             cacheForQueries.get(objectName).increment();
             updateQueriesCounter(objectName);
@@ -70,7 +74,7 @@ public class Database {
         }
     }
 
-    private void insertQueriesCounter(final String objectName) {
+    private synchronized void insertQueriesCounter(final String objectName) {
         executorService.submit(() -> {
             synchronized (connection) {
                 try {
@@ -83,7 +87,7 @@ public class Database {
         });
     }
 
-    private void updateQueriesCounter(final String objectName) {
+    private synchronized void updateQueriesCounter(final String objectName) {
         executorService.submit(() -> {
             synchronized (connection) {
                 final int counter = cacheForQueries.get(objectName).intValue();
@@ -99,7 +103,7 @@ public class Database {
         });
     }
 
-    private LongAdder getLongAdder(int num) {
+    private synchronized LongAdder getLongAdder(int num) {
         final LongAdder longAdder = new LongAdder();
         longAdder.add(num);
         return longAdder;
