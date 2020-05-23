@@ -10,6 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public final class GetPriceResponse {
 
+    public static final long INVALID_PRICE = -1;
+
     private final String objectName;
     private final long price;
 
@@ -17,7 +19,7 @@ public final class GetPriceResponse {
     private long queriesCounter;
 
     public final boolean isPriceValid() {
-        return price > 0;
+        return price >= 0;
     }
 
     public static GetPriceResponse chooseLowerPriceResponse(Object o1, Object o2) {

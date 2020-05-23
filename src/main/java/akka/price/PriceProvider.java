@@ -12,6 +12,7 @@ import static java.lang.Thread.sleep;
 
 public class PriceProvider extends AbstractActor {
 
+    private static final Random random = new Random();
     private final LoggingAdapter log = getLogger(getContext().getSystem(), this);
 
     @Override
@@ -35,7 +36,6 @@ public class PriceProvider extends AbstractActor {
 
     @SneakyThrows
     private long getRandomPrice() {
-        final Random random = new Random();
         sleep(100 + random.nextInt(400));
         return (1 + random.nextInt(9));
     }

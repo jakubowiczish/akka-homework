@@ -29,7 +29,7 @@ public final class ServerNode extends AbstractActor {
                 .build();
     }
 
-    private void requestApply(GetPriceRequest getPriceRequest) {
+    private synchronized void requestApply(GetPriceRequest getPriceRequest) {
         final ActorRef sender = getSender();
 
         final ActorRef firstPriceProvider = context().actorOf(Props.create(PriceProvider.class));
@@ -49,13 +49,16 @@ public final class ServerNode extends AbstractActor {
                 .fallbackTo(secondPriceResponse
                         .map(GetPriceResponse::toGetPriceResponse, contextExecutor))
                 .onComplete(optionalPriceResponse -> {
+                    final long queriesCounter = Database.getInstance().getAndIncrementQueriesCounter(getPriceRequest.getObjectName());
+
                     final GetPriceResponse getPriceResponse = optionalPriceResponse
                             .getOrElse(() -> GetPriceResponse.builder()
                                     .objectName(getPriceRequest.getObjectName())
-                                    .queriesCounter(0) // TODO update
+                                    .price(GetPriceResponse.INVALID_PRICE)
                                     .build());
 
-//                    int queriesCount = Database.getInstance().getAndIncrementQueriesCount(priceRequest.getName());
+                    getPriceResponse.setQueriesCounter(queriesCounter);
+
                     sender.tell(getPriceResponse, getSelf());
                     getSelf().tell(PoisonPill.getInstance(), getSelf());
                     return getPriceResponse;
