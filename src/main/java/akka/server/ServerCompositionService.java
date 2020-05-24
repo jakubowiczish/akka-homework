@@ -50,7 +50,9 @@ public final class ServerCompositionService extends AbstractActor {
                 .fallbackTo(secondPriceResponse
                         .map(GetPriceResponse::toGetPriceResponse, contextExecutor))
                 .onComplete(optionalPriceResponse -> {
-                    final long queriesCounter = Database.getInstance().getAndIncrementQueriesCounter(getPriceRequest.getObjectName());
+                    final long queriesCounter = Database
+                            .getInstance()
+                            .getAndIncrementQueriesCounter(getPriceRequest.getObjectName());
 
                     final GetPriceResponse getPriceResponse = optionalPriceResponse
                             .getOrElse(() -> GetPriceResponse.builder()
