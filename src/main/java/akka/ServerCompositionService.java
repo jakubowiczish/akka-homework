@@ -14,7 +14,7 @@ import scala.concurrent.Future;
 
 import static akka.event.Logging.getLogger;
 
-public final class ServerNode extends AbstractActor {
+public final class ServerCompositionService extends AbstractActor {
 
     private static final int TIMEOUT_IN_MILLIS = 300;
 

@@ -21,7 +21,7 @@ public final class Server extends AbstractActor {
 
     private void requestApply(GetPriceRequest getPriceRequest) {
         context()
-                .actorOf(Props.create(ServerNode.class))
+                .actorOf(Props.create(ServerCompositionService.class))
                 .tell(getPriceRequest, getSender());
     }
 }

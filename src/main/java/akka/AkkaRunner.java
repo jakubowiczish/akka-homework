@@ -8,7 +8,7 @@ import akka.price.GetPriceRequest;
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Runner {
+public class AkkaRunner {
 
     private static final String ACTOR_SYSTEM_NAME = "ACTOR_SYSTEM";
     private static final String SERVER_ACTOR_NAME = "SERVER";
@@ -30,8 +30,10 @@ public class Runner {
             clients.add(client);
         }
 
-        System.out.println(PROGRAM_USAGE_HELP);
+        final HttpServer httpServer = new HttpServer(actorSystem);
+        httpServer.startHttpServer(server);
 
+        System.out.println(PROGRAM_USAGE_HELP);
         handleUserInput(clients);
     }
 
