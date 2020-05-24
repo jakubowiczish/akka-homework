@@ -19,6 +19,9 @@ public class AkkaRunner {
             + " c [id] [object-name] - sends a request with clients' id [id] for specific objects' price with name [object-name]\n"
             + " exit - sends a request to close the application";
 
+    private static final String HOST = "localhost";
+    private static final int PORT = 8080;
+
     public static void main(String[] args) {
         final ActorSystem actorSystem = ActorSystem.create(ACTOR_SYSTEM_NAME);
 
@@ -31,7 +34,7 @@ public class AkkaRunner {
         }
 
         final HttpServer httpServer = new HttpServer(actorSystem);
-        httpServer.startHttpServer(server);
+        httpServer.startHttpServer(server, HOST, PORT);
 
         System.out.println(PROGRAM_USAGE_HELP);
         handleUserInput(clients);

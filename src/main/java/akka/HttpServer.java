@@ -37,18 +37,18 @@ public class HttpServer {
     private final Http http;
     private final Materializer materializer;
 
-    public HttpServer(ActorSystem system) {
+    public HttpServer(final ActorSystem system) {
         this.system = system;
         http = Http.get(system);
         materializer = Materializer.matFromSystem(system);
     }
 
-    public void startHttpServer(final ActorRef server) {
+    public void startHttpServer(final ActorRef server, final String host, final int port) {
         final Route route = createRouteForPriceAndReview(server);
 
         final Flow<HttpRequest, HttpResponse, NotUsed> routeFlow = route.flow(system, materializer);
         final CompletionStage<ServerBinding> futureBinding =
-                http.bindAndHandle(routeFlow, ConnectHttp.toHost("localhost", 8080), materializer);
+                http.bindAndHandle(routeFlow, ConnectHttp.toHost(host, port), materializer);
 
         futureBinding.whenComplete((binding, exception) -> {
             if (binding != null) {
