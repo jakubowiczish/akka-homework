@@ -36,7 +36,7 @@ Z użyciem platformy Akka zaimplementuj serwis porównujący ceny danego przedmi
 
 - Proszę zwrócić uwagę na odpowiednią obsługę błędów oraz czasu życia aktorów
 
-Część 2:
+Część 2:3
 
 Dodaj funkcjonalność zapisywania oraz odczytywania historii wyszukiwań:
 

@@ -1,5 +1,6 @@
-package akka;
+package akka.server;
 
+import akka.database.Database;
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.PoisonPill;

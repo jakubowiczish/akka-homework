@@ -1,4 +1,4 @@
-package akka;
+package akka.client;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
@@ -7,7 +7,7 @@ import akka.price.GetPriceRequest;
 import akka.price.GetPriceResponse;
 import lombok.AllArgsConstructor;
 
-import static akka.Client.LoggingMessageProvider.*;
+import static akka.client.Client.LoggingMessageProvider.*;
 import static akka.event.Logging.getLogger;
 
 @AllArgsConstructor

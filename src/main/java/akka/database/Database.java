@@ -1,4 +1,4 @@
-package akka;
+package akka.database;
 
 
 import lombok.SneakyThrows;

@@ -3,7 +3,10 @@ package akka;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
+import akka.client.Client;
 import akka.price.GetPriceRequest;
+import akka.server.HttpServer;
+import akka.server.Server;
 
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
