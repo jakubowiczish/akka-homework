@@ -7,8 +7,9 @@ import akka.price.GetPriceRequest;
 
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 import java.util.stream.LongStream;
+
+import static java.util.stream.Collectors.toCollection;
 
 public class AkkaRunner {
 
@@ -31,7 +32,7 @@ public class AkkaRunner {
 
         final CopyOnWriteArrayList<ActorRef> clients = LongStream.range(0, NUMBER_OF_CLIENTS)
                 .mapToObj(i -> actorSystem.actorOf(Props.create(Client.class, i, server), "CLIENT_" + i))
-                .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+                .collect(toCollection(CopyOnWriteArrayList::new));
 
         final HttpServer httpServer = new HttpServer(actorSystem);
         httpServer.startHttpServer(server, HOST, PORT);
@@ -46,22 +47,27 @@ public class AkkaRunner {
         while (true) {
             final String line = scanner.nextLine();
 
-            if (line.startsWith("t")) {
-                final String[] splittedLine = line.split(" ");
-                final int numberOfAttempts = Integer.parseInt(splittedLine[1]);
+            switch (line.charAt(0)) {
+                case 't': {
+                    final String[] splittedLine = line.split(" ");
+                    final int numberOfAttempts = Integer.parseInt(splittedLine[1]);
 
-                testClients(clients, numberOfAttempts);
-            } else if (line.startsWith("c")) {
-                final String[] splittedLine = line.split(" ");
-                final int clientNum = Integer.parseInt(splittedLine[1]);
-                final String objectName = splittedLine[2];
+                    testClients(clients, numberOfAttempts);
+                    break;
+                }
+                case 'c': {
+                    final String[] splittedLine = line.split(" ");
+                    final int clientNum = Integer.parseInt(splittedLine[1]);
+                    final String objectName = splittedLine[2];
 
-                clients.get(clientNum).tell(new GetPriceRequest(objectName), null);
-            } else if (line.startsWith("exit")) {
-                System.out.println("Closing the application...");
-                System.exit(0);
-            } else {
-                throw new IllegalArgumentException("Trying to invoke unknown command...");
+                    clients.get(clientNum).tell(new GetPriceRequest(objectName), null);
+                    break;
+                }
+                case 'e':
+                    System.out.println("Closing the application...");
+                    System.exit(0);
+                default:
+                    throw new IllegalArgumentException("Trying to invoke unknown command...");
             }
         }
     }
