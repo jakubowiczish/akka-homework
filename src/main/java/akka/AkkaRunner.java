@@ -7,6 +7,8 @@ import akka.price.GetPriceRequest;
 
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 public class AkkaRunner {
 
@@ -27,11 +29,9 @@ public class AkkaRunner {
 
         final ActorRef server = actorSystem.actorOf(Props.create(Server.class), SERVER_ACTOR_NAME);
 
-        final CopyOnWriteArrayList<ActorRef> clients = new CopyOnWriteArrayList<>();
-        for (long i = 0; i < NUMBER_OF_CLIENTS; i++) {
-            final ActorRef client = actorSystem.actorOf(Props.create(Client.class, i, server), "CLIENT_" + i);
-            clients.add(client);
-        }
+        final CopyOnWriteArrayList<ActorRef> clients = LongStream.range(0, NUMBER_OF_CLIENTS)
+                .mapToObj(i -> actorSystem.actorOf(Props.create(Client.class, i, server), "CLIENT_" + i))
+                .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
 
         final HttpServer httpServer = new HttpServer(actorSystem);
         httpServer.startHttpServer(server, HOST, PORT);
@@ -49,6 +49,7 @@ public class AkkaRunner {
             if (line.startsWith("t")) {
                 final String[] splittedLine = line.split(" ");
                 final int numberOfAttempts = Integer.parseInt(splittedLine[1]);
+
                 testClients(clients, numberOfAttempts);
             } else if (line.startsWith("c")) {
                 final String[] splittedLine = line.split(" ");
