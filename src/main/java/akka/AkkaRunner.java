@@ -18,7 +18,7 @@ public class AkkaRunner {
 
     private static final String ACTOR_SYSTEM_NAME = "ACTOR_SYSTEM";
     private static final String SERVER_ACTOR_NAME = "SERVER";
-    private static final int NUMBER_OF_CLIENTS = 10;
+    private static final int NUMBER_OF_CLIENTS = 20;
 
     private static final String PROGRAM_USAGE_HELP = "PROGRAM USAGE\n"
             + " t [n] - tests exemplary clients with n [n] attempts\n"
