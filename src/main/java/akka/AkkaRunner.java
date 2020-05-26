@@ -70,7 +70,7 @@ public class AkkaRunner {
                     System.out.println("Closing the application...");
                     System.exit(0);
                 default:
-                    throw new IllegalArgumentException("Trying to invoke unknown command...");
+                    System.out.println("Trying to invoke unknown command... Try again");
             }
         }
     }

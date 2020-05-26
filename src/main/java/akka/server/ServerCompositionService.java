@@ -1,5 +1,6 @@
 package akka.server;
 
+import akka.actor.ActorSystem;
 import akka.database.Database;
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
@@ -41,6 +42,8 @@ public final class ServerCompositionService extends AbstractActor {
         final Future<Object> secondPriceResponse
                 = Patterns.ask(secondPriceProvider, getPriceRequest, TIMEOUT_IN_MILLIS);
 
+        final ActorSystem system = context().system();
+
         firstPriceResponse
                 .zipWith(secondPriceResponse,
                         GetPriceResponse::chooseLowerPriceResponse,
@@ -52,7 +55,7 @@ public final class ServerCompositionService extends AbstractActor {
                 .onComplete(optionalPriceResponse -> {
                     final long queriesCounter = Database
                             .getInstance()
-                            .getAndIncrementQueriesCounter(getPriceRequest.getObjectName());
+                            .getAndIncrementQueriesCounter(system, getPriceRequest.getObjectName());
 
                     final GetPriceResponse getPriceResponse = optionalPriceResponse
                             .getOrElse(() -> GetPriceResponse.builder()
